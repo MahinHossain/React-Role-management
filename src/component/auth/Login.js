@@ -11,9 +11,14 @@ class Login extends Component {
     isLogged: false,
   };
   componentDidMount() {
-    let UserData = JSON.parse(localStorage.getItem("userdata"));
-    if (UserData.username && UserData.username.length > 0) {
-      this.props.history.push("./users");
+    //egular mane hole keu jodi login thake tahole to tar  data gula thakbe,
+    //jodi data thake tahole eta loging page e rakhar to dorkar nai,direct user opag e nia jabe
+    let UserData = JSON.parse(localStorage.getItem("userdata")) || undefined;
+
+    if (typeof UserData != "undefined") {
+      if (UserData.username && UserData.username.length > 0) {
+        this.props.history.push("./users");
+      }
     }
   }
 

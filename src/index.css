@@ -18,3 +18,12 @@ code {
   flex-direction: row;
   text-align: left;
 }
+.list-group-item.active {
+  z-index: 2;
+  color: #c9cadf;
+  background-color: #880183;
+  border-color: #e0e5eb;
+}
+.list-group-item:a {
+  color: red;
+}
