@@ -1,16 +1,34 @@
-import React, { useState } from "react";
-import { ListGroup, Table } from "react-bootstrap";
+import Modal from "react-bootstrap/Modal";
+import React, { useEffect, useState } from "react";
+import { ListGroup, Table, Button } from "react-bootstrap";
 import userData from "../../component/auth/UserData";
 import Sidebar from "../../component/layout/Sidebar";
 
 export default function UsersList() {
   const [Users, setUsers] = useState([]);
-
   const userdata = userData();
+
+  // const [showModal, setshowModal] = useState(false);
+  // const handleCloseModal = () => setshowModal(false);
+  // const handleCloseModal = () => setshowModal(true);
+  const [showModal, setShowModal] = useState(false);
+
+  const handleCloseModal = () => setShowModal(false);
+  const handleShowModal = () => setShowModal(true);
+
+  useEffect(() => {
+    setUsers(userdata);
+  }, [setUsers]);
   return (
     <div className=" container col-9">
       <h1 className="text-center">User List</h1>
-      <Table striped bordered hover variant="dark">
+      <div className="float-right">
+        {" "}
+        <button className="btn btn-success" onClick={handleShowModal}>
+          + Assign role{" "}
+        </button>
+      </div>
+      <Table striped bordered hover variant="lite">
         <thead>
           <tr>
             <th> Id</th>
@@ -21,7 +39,7 @@ export default function UsersList() {
           </tr>
         </thead>
         <tbody>
-          {userdata.map((data, index) => (
+          {Users.map((data, index) => (
             <tr>
               <td>{index + 1}</td>
               <td>{data.name}</td>
@@ -40,6 +58,21 @@ export default function UsersList() {
           )}
         </tbody>
       </Table>
+
+      <Modal show={showModal} onHide={handleCloseModal}>
+        <Modal.Header closeButton>
+          <Modal.Title>Modal heading</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>Woohoo, you're reading this text in a modal!</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleCloseModal}>
+            Close
+          </Button>
+          <Button variant="primary" onClick={handleCloseModal}>
+            Save Changes
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 }
