@@ -2,7 +2,7 @@ export default function getRolePermissionData() {
   return [
     {
       id: 1,
-      role: "admin",
+      role: "adminn",
       permission: [],
     },
     {

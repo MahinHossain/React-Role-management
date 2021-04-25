@@ -1,9 +1,9 @@
 import Modal from "react-bootstrap/Modal";
 import React, { useEffect, useState } from "react";
-import { ListGroup, Table, Button } from "react-bootstrap";
+import { ListGroup, Form, Col, Table, Button, Row } from "react-bootstrap";
 import userData from "../../component/auth/UserData";
 import Sidebar from "../../component/layout/Sidebar";
-
+import AssignRole from "./AssignRole";
 export default function UsersList() {
   const [Users, setUsers] = useState([]);
   const userdata = userData();
@@ -19,6 +19,13 @@ export default function UsersList() {
   useEffect(() => {
     setUsers(userdata);
   }, [setUsers]);
+
+  const submitAssignRole = (user) => {
+    const userdata = Users;
+    userdata.unshift(user);
+    setUsers(userdata);
+    setShowModal(false);
+  };
   return (
     <div className=" container col-9">
       <h1 className="text-center">User List</h1>
@@ -60,18 +67,10 @@ export default function UsersList() {
       </Table>
 
       <Modal show={showModal} onHide={handleCloseModal}>
-        <Modal.Header closeButton>
-          <Modal.Title>Modal heading</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>Woohoo, you're reading this text in a modal!</Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleCloseModal}>
-            Close
-          </Button>
-          <Button variant="primary" onClick={handleCloseModal}>
-            Save Changes
-          </Button>
-        </Modal.Footer>
+        <AssignRole
+          submitData={submitAssignRole}
+          handleCloseModall={handleCloseModal}
+        />
       </Modal>
     </div>
   );
