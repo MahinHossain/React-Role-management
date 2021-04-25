@@ -4,28 +4,70 @@ import { ListGroup, Form, Col, Table, Button, Row } from "react-bootstrap";
 import userData from "../../component/auth/UserData";
 import Sidebar from "../../component/layout/Sidebar";
 import AssignRole from "./AssignRole";
+import AssignRoleEdit from "./AssignRoleEdit";
 export default function UsersList() {
-  const [Users, setUsers] = useState([]);
+  const [Users, setUsers] = useState({
+    userdataAll: [],
+  });
   const userdata = userData();
 
-  // const [showModal, setshowModal] = useState(false);
-  // const handleCloseModal = () => setshowModal(false);
-  // const handleCloseModal = () => setshowModal(true);
   const [showModal, setShowModal] = useState(false);
+  const [showEditModal, setshowEditModal] = useState(false);
+  const [editData, seteditData] = useState("");
 
   const handleCloseModal = () => setShowModal(false);
   const handleShowModal = () => setShowModal(true);
+  const handleEditCloseModal = () => setshowEditModal(false);
+  const handleEditShowModal = () => setshowEditModal(true);
 
   useEffect(() => {
-    setUsers(userdata);
+    const userdat = { ...Users };
+    userdat.userdataAll = userdata;
+    setUsers(userdat);
   }, [setUsers]);
 
   const submitAssignRole = (user) => {
-    const userdata = Users;
-    userdata.unshift(user);
+    console.log(`user`, user);
+
+    const userdata = { ...Users };
+    console.log(`userdata`, userdata);
+    // userdata.userdataAll.unshift(user);
+    for (let i = 0; i < userdata.userdataAll.length; i++) {
+      if (userdata.userdataAll[i].id === user.id) {
+        userdata.userdataAll[i] = user;
+      }
+    }
+
     setUsers(userdata);
     setShowModal(false);
+    alert("Role Assign Successfull");
   };
+  const submitAssignRoleEdit = (user) => {
+    const userdata = { ...Users };
+
+    for (let i = 0; i < userdata.userdataAll.length; i++) {
+      const element = userdata.userdataAll[i];
+      if (user.id == element.id) {
+        element.role = user.role;
+      }
+    }
+    setUsers(userdata);
+    setshowEditModal(false);
+    alert("Role Updated ");
+  };
+
+  const deleteUser = (id) => {
+    const userdata = { ...Users };
+    userdata.userdataAll.splice(id, 1);
+    setUsers(userdata);
+  };
+  const editeUser = (item) => {
+    const userdata = { ...Users };
+    seteditData(item);
+    handleEditShowModal();
+  };
+
+  console.log(`Users.userdataAll final`, Users.userdataAll);
   return (
     <div className=" container col-9">
       <h1 className="text-center">User List</h1>
@@ -46,15 +88,25 @@ export default function UsersList() {
           </tr>
         </thead>
         <tbody>
-          {Users.map((data, index) => (
+          {Users.userdataAll.map((data, index) => (
             <tr>
               <td>{index + 1}</td>
               <td>{data.name}</td>
               <td>{data.username}</td>
               <td>{data.role.length > 0 ? data.role : "-"}</td>
               <td>
-                <button className="btn btn-success">Edit </button>
-                <button className="btn btn-danger">Delete </button>
+                <button
+                  className="btn btn-success"
+                  onClick={() => editeUser(data)}
+                >
+                  Edit{" "}
+                </button>
+                <button
+                  className="btn btn-danger"
+                  onClick={() => deleteUser(index)}
+                >
+                  Delete{" "}
+                </button>
               </td>
             </tr>
           ))}
@@ -65,7 +117,16 @@ export default function UsersList() {
           )}
         </tbody>
       </Table>
+      {/* for update role ..start */}
+      <Modal show={showEditModal} onHide={handleEditCloseModal}>
+        <AssignRoleEdit
+          submitEdit={submitAssignRoleEdit}
+          onCloseEdit={handleEditCloseModal}
+          userEdiData={editData}
+        />
+      </Modal>
 
+      {/* end */}
       <Modal show={showModal} onHide={handleCloseModal}>
         <AssignRole
           submitData={submitAssignRole}

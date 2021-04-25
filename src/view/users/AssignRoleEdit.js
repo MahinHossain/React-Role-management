@@ -4,40 +4,39 @@ import { ListGroup, Form, Col, Table, Button, Row } from "react-bootstrap";
 import userData from "../../component/auth/UserData";
 import getRolePermissionData from "../../services/role/RolePermissionData";
 
-export default function AssignRole(props) {
-  const [Users, setUsers] = useState([]);
+export default function AssignRoleEdit(props) {
+  console.log(`props.userEdiData`, props.userEdiData);
   const [roleList, setroleList] = useState([]);
 
-  const [user, setUser] = useState("");
   const [role, setRole] = useState("");
 
   const [showModal, setShowModal] = useState(false);
 
   const rolemasterdata = getRolePermissionData();
-  const userdata = userData();
-  useEffect(() => {
-    setUsers(userdata);
-  }, [setUsers]);
+
+  const { userEdiData, submitEdit, onCloseEdit } = props;
+  const userdata = userEdiData;
+  // const userdata = userData();
+  // useEffect(() => {
+  //   setUsers(userdata);
+  // }, [setUsers]);
 
   useEffect(() => {
     setroleList(rolemasterdata);
   }, []);
-  const changeUser = (e) => {
-    setUser(e.target.value);
-  };
+
   const changeRole = (e) => {
     setRole(e.target.value);
   };
 
   const submitRole = () => {
-    if (user == "" || role == "") {
+    if (role == "") {
       alert("please Inset dta");
       return false;
     }
 
-    const userdata = JSON.parse(user);
     const userrole = JSON.parse(role);
-    const obj = {
+    const dataObject = {
       id: userdata.id,
       name: userdata.name,
       password: userdata.password,
@@ -45,12 +44,12 @@ export default function AssignRole(props) {
       role: userrole.role,
     };
 
-    props.submitData(obj);
+    submitEdit(dataObject);
   };
   return (
     <>
       <Modal.Header closeButton>
-        <Modal.Title>Assign role</Modal.Title>
+        <Modal.Title>Edit Assign role</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Form>
@@ -58,19 +57,7 @@ export default function AssignRole(props) {
             <Form.Label column sm="2">
               User
             </Form.Label>
-            <Col sm="10">
-              <Form.Control
-                as="select"
-                value={user}
-                onChange={changeUser}
-                required
-              >
-                <option value="">Please select Users</option>
-                {Users.map((item) => (
-                  <option value={JSON.stringify(item)}>{item.name}</option>
-                ))}
-              </Form.Control>
-            </Col>
+            <Col sm="10">{props.userEdiData.name}</Col>
           </Form.Group>
 
           <Form.Group as={Row} controlId="formPlaintextPassword">
@@ -95,11 +82,11 @@ export default function AssignRole(props) {
         </Form>
       </Modal.Body>
       <Modal.Footer>
-        <Button variant="danger" onClick={props.handleCloseModall}>
+        <Button variant="danger" onClick={props.onCloseEdit}>
           Close
         </Button>
         <Button variant="primary" onClick={submitRole}>
-          Save Changes
+          Update
         </Button>
       </Modal.Footer>
     </>
